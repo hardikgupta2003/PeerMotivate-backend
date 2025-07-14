@@ -4,7 +4,7 @@ const { getUser, createUser } = require("../models/userModel");
 const registerUser = async (req, res) => {
   const { name, email } = req.body;
   const firebase_id = req.user.uid;
-  // console.log("firebase id in controller ", firebase_id);
+  console.log("firebase id in controller ", firebase_id);
 
   if (!firebase_id || !name || !email) {
     return res.status(400).json({ error: "All fields are required" });

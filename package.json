@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "npkill": "^0.12.2"
+  }
+}

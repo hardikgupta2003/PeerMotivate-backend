@@ -6,14 +6,16 @@ const {
   getHabits,
   updateHabitById,
   deleteHabitById,
+  getHabitById,
 } = require("../controllers/habitController");
 
 // Protect all routes
-router.use(verifyFirebaseToken);
+// router.use(verifyFirebaseToken);
 
-router.post("/", addHabit);
-router.get("/", getHabits);
-router.patch("/:id", updateHabitById);
-router.delete("/:id", deleteHabitById);
+router.post("/",verifyFirebaseToken, addHabit);
+router.get("/",verifyFirebaseToken, getHabits);
+router.get("/:id",verifyFirebaseToken, getHabitById);
+router.patch("/:id",verifyFirebaseToken, updateHabitById);
+router.delete("/:id",verifyFirebaseToken, deleteHabitById);
 
 module.exports = router;

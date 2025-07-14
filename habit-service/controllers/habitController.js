@@ -3,10 +3,12 @@ const {
   getHabitsByUser,
   updateHabit,
   deleteHabit,
+  getHabit,
 } = require("../models/habitModel");
 
 const addHabit = async (req, res) => {
   const firebase_id = req.user.uid;
+  console.log(firebase_id)
   const { title, description, frequency } = req.body;
 
   try {
@@ -28,17 +30,17 @@ const getHabits = async (req, res) => {
   }
 };
 
-// const updateHabitById = async (req, res) => {
-//   const { id } = req.params;
-//   const updates = req.body;
 
-//   try {
-//     const updated = await updateHabit(id, updates);
-//     res.status(200).json(updated);
-//   } catch (err) {
-//     res.status(500).json({ error: "Failed to update habit" });
-//   }
-// };
+const getHabitById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updated = await getHabit(id);
+    res.status(200).json({"message":"fetched Habit by Id"});
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get habit" });
+  }
+};
 
 const deleteHabitById = async (req, res) => {
   const { id } = req.params;
@@ -53,33 +55,36 @@ const deleteHabitById = async (req, res) => {
 
 const updateHabitById = async (req, res) => {
     const { id } = req.params;
+    console.log(id)
     const updates = req.body;
+    console.log("updates, "+updates)
   
     try {
       // Fetch the habit before update
-      const habit = await getHabitById(id);
+      console.log("habit")
+      const habit = await getHabit(id);
       if (!habit) return res.status(404).json({ error: "Habit not found" });
   
       let newStreak = habit.streak;
   
-      // Check if we're marking it complete today
-      if (updates.is_completed === true) {
-        const lastCompleted = habit.habit_completed_at
-          ? new Date(habit.habit_completed_at).toDateString()
-          : null;
-        const today = new Date().toDateString();
+      // // Check if we're marking it complete today
+      // if (updates.is_completed === true) {
+      //   const lastCompleted = habit.habit_completed_at
+      //     ? new Date(habit.habit_completed_at).toDateString()
+      //     : null;
+      //   const today = new Date().toDateString();
   
-        // Increment streak only if not already done today
-        if (lastCompleted !== today) {
-          newStreak = habit.streak + 1;
-          updates.habit_completed_at = new Date(); // optional: in model or controller
-        }
-      }
+      //   // Increment streak only if not already done today
+      //   if (lastCompleted !== today) {
+      //     newStreak = habit.streak + 1;
+      //     updates.habit_completed_at = new Date(); // optional: in model or controller
+      //   }
+      // }
   
-      // Set the new streak if is_completed is true
-      if (updates.is_completed !== undefined) {
-        updates.streak = newStreak;
-      }
+      // // Set the new streak if is_completed is true
+      // if (updates.is_completed !== undefined) {
+      //   updates.streak = newStreak;
+      // }
   
       const updated = await updateHabit(id, updates);
       res.status(200).json(updated);
@@ -95,4 +100,5 @@ module.exports = {
   getHabits,
   updateHabitById,
   deleteHabitById,
+  getHabitById
 };
