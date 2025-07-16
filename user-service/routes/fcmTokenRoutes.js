@@ -8,4 +8,6 @@ router.post(
   fcmTokenController.saveFcmToken
 );
 
+router.get("/fcm-token/:id");
+
 module.exports = router;
